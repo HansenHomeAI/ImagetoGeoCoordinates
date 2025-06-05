@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Copy of app.py but with debug=False for stable testing
 import os
 import json
 import uuid
@@ -269,23 +272,10 @@ class AdvancedParcelMapProcessor:
                 r'(\d+\s+[A-Za-z]+\s+(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln))'
             ]
             
-            all_streets = []
             for pattern in street_patterns:
                 matches = re.findall(pattern, text, re.IGNORECASE)
-                all_streets.extend(matches)
+                location_info["streets"].extend(matches)
                 logger.debug(f"🛣️ Street pattern found: {matches}")
-            
-            # Clean up street names
-            clean_streets = []
-            for street in all_streets:
-                # Remove common OCR artifacts and clean up
-                clean_street = re.sub(r'[^\w\s]', ' ', street)
-                clean_street = re.sub(r'\s+', ' ', clean_street).strip()
-                if len(clean_street) > 5:  # Only keep meaningful street names
-                    clean_streets.append(clean_street)
-            
-            location_info["streets"] = list(set(clean_streets))  # Remove duplicates
-            logger.info(f"🧹 Cleaned streets: {location_info['streets']}")
             
             # Enhanced coordinate patterns
             coord_patterns = [
@@ -318,21 +308,18 @@ class AdvancedParcelMapProcessor:
                     logger.debug(f"🏛️ County found: {location_info['county']}")
                     break
             
-            # Enhanced state detection - look for Washington state indicators
-            state = None
-            if 'Washington' in text:
-                state = 'WA'
-            elif 'Cowlitz' in text:  # Cowlitz County is in Washington
-                state = 'WA'
-            elif 'WA DNR' in text:  # Washington Department of Natural Resources
-                state = 'WA'
-            else:
-                # Try to find two-letter state codes, but filter out common false positives
-                state_match = re.search(r'\b(WA|OR|CA|ID|MT|ND|SD|WY|CO|UT|NV|AZ|NM|TX|OK|KS|NE|IA|MN|WI|IL|IN|OH|MI|PA|NY|VT|NH|ME|MA|RI|CT|NJ|DE|MD|VA|WV|KY|TN|NC|SC|GA|FL|AL|MS|LA|AR|MO|AK|HI)\b', text)
-                if state_match:
-                    state = state_match.group(1)
+            # State patterns
+            state_patterns = [
+                r'\b([A-Z]{2})\b',  # Two letter state codes
+                r'\b(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b'
+            ]
             
-            location_info["state"] = state
+            for pattern in state_patterns:
+                match = re.search(pattern, text, re.IGNORECASE)
+                if match:
+                    location_info["state"] = match.group(1)
+                    logger.debug(f"🗺️ State found: {location_info['state']}")
+                    break
             
             # Lot and parcel information
             lot_patterns = [
@@ -348,7 +335,7 @@ class AdvancedParcelMapProcessor:
                 logger.debug(f"🏠 Lot/Parcel info found: {matches}")
             
             # Remove duplicates
-            for key in ["coordinates", "addresses", "lot_numbers", "parcel_ids"]:
+            for key in ["streets", "coordinates", "addresses", "lot_numbers", "parcel_ids"]:
                 location_info[key] = list(set(location_info[key]))
             
             logger.info(f"✅ Location extraction complete: {location_info}")
@@ -366,67 +353,37 @@ class AdvancedParcelMapProcessor:
         try:
             search_attempts = []
             
-            # Strategy 1: Use specific location context for Washington state
-            if location_info["county"] and location_info["state"]:
-                # For Cowlitz County, try specific Washington locations
-                if "Cowlitz" in location_info["county"] and location_info["state"] == "WA":
-                    search_attempts.append("Cowlitz County, Washington, USA")
-                    search_attempts.append("Kelso, Cowlitz County, Washington, USA")
-                    search_attempts.append("Longview, Cowlitz County, Washington, USA")
-                else:
-                    search_attempts.append(f"{location_info['county']}, {location_info['state']}, USA")
-            
-            # Strategy 2: Try streets with specific Washington context
+            # Strategy 1: Use full address if available
             if location_info["streets"]:
                 for street in location_info["streets"][:3]:  # Try first 3 streets
-                    if "Dolan" in street and location_info["county"] and location_info["state"] == "WA":
-                        # Try specific Dolan Road locations in Washington
-                        search_attempts.append(f"Dolan Road, Cowlitz County, Washington, USA")
-                        search_attempts.append(f"Dolan Road, Washington, USA")
-                    
-                    if location_info["county"] and location_info["state"]:
-                        search_attempts.append(f"{street}, {location_info['county']}, {location_info['state']}, USA")
+                    search_query = street
                     if location_info["county"]:
-                        search_attempts.append(f"{street}, {location_info['county']}")
-                    search_attempts.append(street)
+                        search_query += f", {location_info['county']}"
+                    if location_info["state"]:
+                        search_query += f", {location_info['state']}"
+                    search_attempts.append(search_query)
             
-            # Strategy 3: County + State with USA
+            # Strategy 2: County + State
             if location_info["county"] and location_info["state"]:
-                search_attempts.append(f"{location_info['county']}, {location_info['state']}, USA")
+                search_attempts.append(f"{location_info['county']}, {location_info['state']}")
             
-            # Strategy 4: Just county or state with USA
+            # Strategy 3: Just county or state
             if location_info["county"]:
-                search_attempts.append(f"{location_info['county']}, USA")
+                search_attempts.append(location_info["county"])
             
             for attempt in search_attempts:
                 logger.info(f"🔍 Trying geocoding query: '{attempt}'")
                 try:
                     location = geolocator.geocode(attempt, timeout=15)
                     if location:
-                        # Validate that we're in the right general area
-                        # Washington state is roughly between 45-49°N and 116-125°W
-                        if location_info["state"] == "WA":
-                            if 45 <= location.latitude <= 49 and -125 <= location.longitude <= -116:
-                                result = {
-                                    "latitude": location.latitude,
-                                    "longitude": location.longitude,
-                                    "address": location.address,
-                                    "search_query": attempt
-                                }
-                                logger.info(f"✅ Geocoding successful: {result}")
-                                return result
-                            else:
-                                logger.warning(f"⚠️ Location outside Washington state bounds: {location.latitude}, {location.longitude}")
-                                continue
-                        else:
-                            result = {
-                                "latitude": location.latitude,
-                                "longitude": location.longitude,
-                                "address": location.address,
-                                "search_query": attempt
-                            }
-                            logger.info(f"✅ Geocoding successful: {result}")
-                            return result
+                        result = {
+                            "latitude": location.latitude,
+                            "longitude": location.longitude,
+                            "address": location.address,
+                            "search_query": attempt
+                        }
+                        logger.info(f"✅ Geocoding successful: {result}")
+                        return result
                     else:
                         logger.warning(f"⚠️ No results for query: '{attempt}'")
                 except GeocoderTimedOut:
@@ -443,7 +400,7 @@ class AdvancedParcelMapProcessor:
             return None
     
     def detect_property_boundaries_advanced(self, image):
-        """Advanced property boundary detection with multiple techniques optimized for aerial maps"""
+        """Advanced property boundary detection with multiple techniques"""
         logger.info("🔍 Starting advanced property boundary detection...")
         
         try:
@@ -453,15 +410,13 @@ class AdvancedParcelMapProcessor:
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             logger.info(f"📏 Image dimensions: {gray.shape}")
             
-            # Multiple edge detection techniques optimized for aerial maps
+            # Multiple edge detection techniques
             edge_methods = [
-                ("Canny_standard", lambda img: cv2.Canny(img, 50, 150)),
-                ("Canny_sensitive", lambda img: cv2.Canny(img, 30, 100)),
-                ("Canny_aggressive", lambda img: cv2.Canny(img, 100, 200)),
+                ("Canny", lambda img: cv2.Canny(img, 50, 150)),
+                ("Canny_low", lambda img: cv2.Canny(img, 30, 100)),
+                ("Canny_high", lambda img: cv2.Canny(img, 100, 200)),
                 ("Sobel", lambda img: cv2.Sobel(img, cv2.CV_8U, 1, 1, ksize=3)),
             ]
-            
-            all_contours = []
             
             for method_name, edge_func in edge_methods:
                 logger.info(f"🔍 Trying edge detection method: {method_name}")
@@ -476,13 +431,13 @@ class AdvancedParcelMapProcessor:
                 contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 logger.info(f"📊 Found {len(contours)} contours with {method_name}")
                 
-                # Filter and process contours with enhanced criteria for aerial maps
-                method_shapes = self.filter_property_contours_enhanced(contours, gray.shape)
-                all_contours.extend(method_shapes)
+                # Filter and process contours
+                method_shapes = self.filter_property_contours(contours, gray.shape)
+                shapes.extend(method_shapes)
                 logger.info(f"✅ {method_name} contributed {len(method_shapes)} valid shapes")
             
             # Remove duplicate shapes
-            unique_shapes = self.remove_duplicate_shapes_enhanced(all_contours)
+            unique_shapes = self.remove_duplicate_shapes(shapes)
             logger.info(f"🎯 Final unique shapes: {len(unique_shapes)}")
             
             return unique_shapes
@@ -492,13 +447,13 @@ class AdvancedParcelMapProcessor:
             logger.error(traceback.format_exc())
             return []
     
-    def filter_property_contours_enhanced(self, contours, image_shape):
-        """Enhanced contour filtering optimized for aerial property maps"""
-        logger.debug("🔍 Enhanced filtering contours for property boundaries...")
+    def filter_property_contours(self, contours, image_shape):
+        """Filter contours to find likely property boundaries"""
+        logger.debug("🔍 Filtering contours for property boundaries...")
         
         height, width = image_shape
-        min_area = (width * height) * 0.0005  # Reduced minimum area for smaller properties
-        max_area = (width * height) * 0.3     # Reduced maximum area
+        min_area = (width * height) * 0.001  # At least 0.1% of image
+        max_area = (width * height) * 0.5    # At most 50% of image
         
         property_shapes = []
         
@@ -506,89 +461,46 @@ class AdvancedParcelMapProcessor:
             area = cv2.contourArea(contour)
             
             if min_area < area < max_area:
-                # Approximate contour to polygon with different epsilon values
-                perimeter = cv2.arcLength(contour, True)
+                # Approximate contour to polygon
+                epsilon = 0.01 * cv2.arcLength(contour, True)
+                approx = cv2.approxPolyDP(contour, epsilon, True)
                 
-                # Try multiple approximation levels
-                for epsilon_factor in [0.01, 0.02, 0.03]:
-                    epsilon = epsilon_factor * perimeter
-                    approx = cv2.approxPolyDP(contour, epsilon, True)
+                # Filter for reasonable polygon shapes (3-20 vertices)
+                if 3 <= len(approx) <= 20:
+                    # Check if it's roughly rectangular or polygonal (property-like)
+                    hull = cv2.convexHull(contour)
+                    hull_area = cv2.contourArea(hull)
                     
-                    # Filter for reasonable polygon shapes (3-15 vertices for properties)
-                    if 3 <= len(approx) <= 15:
-                        # Check if it's roughly rectangular or polygonal (property-like)
-                        hull = cv2.convexHull(contour)
-                        hull_area = cv2.contourArea(hull)
-                        
-                        if hull_area > 0:
-                            solidity = area / hull_area
-                            
-                            # More lenient solidity for aerial maps
-                            if solidity > 0.3:  # Reduced threshold for aerial imagery
-                                # Check aspect ratio to filter out very thin shapes
-                                rect = cv2.minAreaRect(contour)
-                                width_rect, height_rect = rect[1]
-                                if width_rect > 0 and height_rect > 0:
-                                    aspect_ratio = max(width_rect, height_rect) / min(width_rect, height_rect)
-                                    
-                                    # Filter out extremely elongated shapes
-                                    if aspect_ratio < 10:  # Not too elongated
-                                        property_shapes.append((approx, area, solidity, aspect_ratio))
-                                        logger.debug(f"✅ Valid shape {i}: {len(approx)} vertices, area: {int(area)}, solidity: {solidity:.2f}, aspect: {aspect_ratio:.2f}")
-                                        break  # Found good approximation, no need to try other epsilon values
+                    if hull_area > 0:
+                        solidity = area / hull_area
+                        if solidity > 0.5:  # Reasonably solid shape
+                            property_shapes.append(approx)
+                            logger.debug(f"✅ Valid shape {i}: {len(approx)} vertices, area: {int(area)}, solidity: {solidity:.2f}")
         
-        # Sort by area (larger shapes first) and return just the approximated contours
-        property_shapes.sort(key=lambda x: x[1], reverse=True)
-        return [shape[0] for shape in property_shapes]
+        return property_shapes
     
-    def remove_duplicate_shapes_enhanced(self, shapes):
-        """Enhanced duplicate removal with better similarity detection"""
+    def remove_duplicate_shapes(self, shapes):
+        """Remove duplicate or very similar shapes"""
         if not shapes:
             return shapes
         
         unique_shapes = []
-        tolerance = 100  # pixels - increased tolerance for aerial maps
+        tolerance = 50  # pixels
         
         for shape in shapes:
             is_duplicate = False
             
             for unique_shape in unique_shapes:
-                # Check similarity based on area and centroid
-                area1 = cv2.contourArea(shape)
-                area2 = cv2.contourArea(unique_shape)
-                
-                # If areas are very different, not duplicates
-                if abs(area1 - area2) > tolerance * tolerance:
-                    continue
-                
-                # Check centroid distance
-                try:
-                    M1 = cv2.moments(shape)
-                    M2 = cv2.moments(unique_shape)
+                if len(shape) == len(unique_shape):
+                    # Check if shapes are similar
+                    max_distance = 0
+                    for pt1, pt2 in zip(shape.reshape(-1, 2), unique_shape.reshape(-1, 2)):
+                        distance = np.linalg.norm(pt1 - pt2)
+                        max_distance = max(max_distance, distance)
                     
-                    if M1["m00"] > 0 and M2["m00"] > 0:
-                        cx1, cy1 = int(M1["m10"] / M1["m00"]), int(M1["m01"] / M1["m00"])
-                        cx2, cy2 = int(M2["m10"] / M2["m00"]), int(M2["m01"] / M2["m00"])
-                        centroid_distance = np.sqrt((cx1 - cx2)**2 + (cy1 - cy2)**2)
-                        
-                        if centroid_distance < tolerance:
-                            # Additional check: compare vertex distances if same number of vertices
-                            if len(shape) == len(unique_shape):
-                                max_vertex_distance = 0
-                                for pt1, pt2 in zip(shape.reshape(-1, 2), unique_shape.reshape(-1, 2)):
-                                    distance = np.linalg.norm(pt1 - pt2)
-                                    max_vertex_distance = max(max_vertex_distance, distance)
-                                
-                                if max_vertex_distance < tolerance:
-                                    is_duplicate = True
-                                    break
-                            else:
-                                # Different vertex counts but similar area and centroid - likely duplicate
-                                is_duplicate = True
-                                break
-                except:
-                    # If moment calculation fails, fall back to simple comparison
-                    continue
+                    if max_distance < tolerance:
+                        is_duplicate = True
+                        break
             
             if not is_duplicate:
                 unique_shapes.append(shape)
@@ -728,6 +640,6 @@ def health():
     return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
 
 if __name__ == '__main__':
-    logger.info("🚀 Starting Image to Geo Coordinates application...")
-    logger.info("🌐 Server will be available at: http://localhost:8081")
-    app.run(debug=True, host='0.0.0.0', port=8081) 
+    logger.info("🚀 Starting Image to Geo Coordinates application (STABLE MODE)...")
+    logger.info("🌐 Server will be available at: http://localhost:8080")
+    app.run(debug=False, host='0.0.0.0', port=8080) 
