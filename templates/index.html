@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Geo Coordinates - Parcel Map Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .upload-section {
+            flex: 1;
+            padding: 40px;
+            border-right: 2px solid #f0f0f0;
+        }
+
+        .results-section {
+            flex: 1;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .uploaded-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .processing {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .coordinates-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .coordinates-table th,
+        .coordinates-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .coordinates-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .extracted-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .location-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .location-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f0f2ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Image to Geo Coordinates</h1>
+            <p>Upload parcel maps and extract geographical coordinates automatically</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="section-title">
+                    📁 Upload Parcel Map
+                </h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📸</div>
+                    <div class="upload-text">Drag & drop your parcel map here</div>
+                    <div class="upload-subtext">or click to browse</div>
+                    <div class="upload-subtext">Supports: PDF, JPEG, PNG, HEIC, TIFF</div>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf,.jpg,.jpeg,.png,.heic,.tiff,.bmp,.gif">
+                </div>
+
+                <div id="uploadedImageContainer" style="display: none;">
+                    <img id="uploadedImage" class="uploaded-image" alt="Uploaded image">
+                    <button class="btn" onclick="resetUpload()">Upload Another Image</button>
+                </div>
+
+                <div id="processingIndicator" class="processing" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Processing your parcel map...</p>
+                    <p style="font-size: 0.9rem; color: #666;">Extracting text, detecting boundaries, and geocoding location</p>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <h2 class="section-title">
+                    📊 Extraction Results
+                </h2>
+
+                <div id="resultsContainer" style="display: none;">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="shapesCount">0</div>
+                            <div class="stat-label">Shapes Detected</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="coordsCount">0</div>
+                            <div class="stat-label">Coordinates</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="locationFound">❌</div>
+                            <div class="stat-label">Location Found</div>
+                        </div>
+                    </div>
+
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h3>🏠 Property Coordinates</h3>
+                            <div id="coordinatesDisplay">
+                                <p style="color: #666;">Coordinates will appear here after processing</p>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>📍 Location Information</h3>
+                            <div id="locationDisplay">
+                                <p style="color: #666;">Location details will appear here</p>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>📝 Extracted Text</h3>
+                            <div id="extractedText" class="extracted-text">
+                                Text extracted from the image will appear here
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="placeholder" style="text-align: center; padding: 100px 20px; color: #999;">
+                    <div style="font-size: 3rem;">🗺️</div>
+                    <p>Upload a parcel map to see the extracted coordinates</p>
+                </div>
+
+                <div id="errorContainer" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadedImageContainer = document.getElementById('uploadedImageContainer');
+        const uploadedImage = document.getElementById('uploadedImage');
+        const processingIndicator = document.getElementById('processingIndicator');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const placeholder = document.getElementById('placeholder');
+        const errorContainer = document.getElementById('errorContainer');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Display uploaded image
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImage.src = e.target.result;
+                uploadArea.style.display = 'none';
+                uploadedImageContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            // Show processing indicator
+            processingIndicator.style.display = 'block';
+            placeholder.style.display = 'none';
+            errorContainer.style.display = 'none';
+            resultsContainer.style.display = 'none';
+
+            // Upload and process file
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                processingIndicator.style.display = 'none';
+                if (data.error) {
+                    showError(data.error);
+                } else {
+                    showResults(data);
+                }
+            })
+            .catch(error => {
+                processingIndicator.style.display = 'none';
+                showError('Upload failed: ' + error.message);
+            });
+        }
+
+        function showResults(data) {
+            resultsContainer.style.display = 'block';
+            
+            // Update stats
+            document.getElementById('shapesCount').textContent = data.detected_shapes || 0;
+            document.getElementById('coordsCount').textContent = 
+                data.property_coordinates ? data.property_coordinates.reduce((sum, shape) => sum + shape.length, 0) : 0;
+            document.getElementById('locationFound').textContent = data.base_coordinates ? '✅' : '❌';
+
+            // Display coordinates
+            displayCoordinates(data.property_coordinates);
+            
+            // Display location info
+            displayLocationInfo(data.location_info, data.base_coordinates);
+            
+            // Display extracted text
+            document.getElementById('extractedText').textContent = data.extracted_text || 'No text extracted';
+        }
+
+        function displayCoordinates(coordinates) {
+            const container = document.getElementById('coordinatesDisplay');
+            
+            if (!coordinates || coordinates.length === 0) {
+                container.innerHTML = '<p style="color: #999;">No property coordinates detected</p>';
+                return;
+            }
+
+            let html = '';
+            coordinates.forEach((shape, shapeIndex) => {
+                html += `<h4>Property Shape ${shapeIndex + 1}</h4>`;
+                html += `<table class="coordinates-table">
+                    <thead>
+                        <tr>
+                            <th>Point</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                
+                shape.forEach((coord, index) => {
+                    html += `<tr>
+                        <td>Point ${index + 1}</td>
+                        <td>${coord.latitude.toFixed(6)}</td>
+                        <td>${coord.longitude.toFixed(6)}</td>
+                    </tr>`;
+                });
+                
+                html += '</tbody></table><br>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function displayLocationInfo(locationInfo, baseCoords) {
+            const container = document.getElementById('locationDisplay');
+            let html = '';
+
+            if (baseCoords) {
+                html += `<div class="result-card" style="background: #e8f5e8; margin-bottom: 15px;">
+                    <strong>📍 Base Location:</strong><br>
+                    ${baseCoords.address}<br>
+                    <small>Lat: ${baseCoords.latitude.toFixed(6)}, Lon: ${baseCoords.longitude.toFixed(6)}</small>
+                </div>`;
+            }
+
+            if (locationInfo) {
+                if (locationInfo.streets && locationInfo.streets.length > 0) {
+                    html += '<div><strong>Streets Found:</strong><div class="location-info">';
+                    locationInfo.streets.forEach(street => {
+                        html += `<span class="location-tag">${street}</span>`;
+                    });
+                    html += '</div></div>';
+                }
+
+                if (locationInfo.county) {
+                    html += `<div style="margin-top: 10px;"><strong>County:</strong> <span class="location-tag">${locationInfo.county}</span></div>`;
+                }
+
+                if (locationInfo.coordinates && locationInfo.coordinates.length > 0) {
+                    html += '<div style="margin-top: 10px;"><strong>Coordinates Found in Text:</strong><div class="location-info">';
+                    locationInfo.coordinates.forEach(coord => {
+                        html += `<span class="location-tag">${coord}</span>`;
+                    });
+                    html += '</div></div>';
+                }
+            }
+
+            if (!html) {
+                html = '<p style="color: #999;">No location information extracted</p>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function showError(message) {
+            errorContainer.innerHTML = `<div class="error">❌ ${message}</div>`;
+            errorContainer.style.display = 'block';
+        }
+
+        function resetUpload() {
+            uploadArea.style.display = 'block';
+            uploadedImageContainer.style.display = 'none';
+            processingIndicator.style.display = 'none';
+            resultsContainer.style.display = 'none';
+            errorContainer.style.display = 'none';
+            placeholder.style.display = 'block';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html> 
