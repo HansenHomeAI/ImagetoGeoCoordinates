@@ -95,10 +95,16 @@ class AdvancedParcelMapProcessor:
             logger.info(f"📝 Extracted text length: {len(self.extracted_text)} characters")
             logger.debug(f"📄 Full extracted text: {self.extracted_text[:500]}...")
             
+            # Store for advanced processor access
+            self._last_extracted_text = self.extracted_text
+            
             # Step 3: Find location clues in text
             logger.info("🌍 Step 3: Analyzing location clues...")
             location_info = self.extract_location_clues(self.extracted_text)
             logger.info(f"🏠 Location info found: {location_info}")
+            
+            # Store for advanced processor access
+            self._last_location_info = location_info
             
             # Step 4: Geocode location to get approximate coordinates
             logger.info("🗺️ Step 4: Geocoding location...")
@@ -447,58 +453,91 @@ class AdvancedParcelMapProcessor:
         logger.info("🔍 Starting advanced property boundary detection...")
         
         try:
-            shapes = []
-            
-            # Convert to grayscale
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            logger.info(f"📏 Image dimensions: {gray.shape}")
-            
-            # Multiple edge detection techniques optimized for aerial maps
-            edge_methods = [
-                ("Canny_standard", lambda img: cv2.Canny(img, 50, 150)),
-                ("Canny_sensitive", lambda img: cv2.Canny(img, 30, 100)),
-                ("Canny_aggressive", lambda img: cv2.Canny(img, 100, 200)),
-                ("Sobel", lambda img: cv2.Sobel(img, cv2.CV_8U, 1, 1, ksize=3)),
-            ]
-            
-            all_contours = []
-            
-            for method_name, edge_func in edge_methods:
-                logger.info(f"🔍 Trying edge detection method: {method_name}")
+            # Try the enhanced property detector first
+            try:
+                from enhanced_property_detector import EnhancedPropertyDetector
                 
-                # Apply Gaussian blur to reduce noise
-                blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+                # Create enhanced detector instance
+                enhanced_detector = EnhancedPropertyDetector()
                 
-                # Apply edge detection
-                edges = edge_func(blurred)
+                # Prepare text information for context
+                text_info = {
+                    "extracted_text": getattr(self, '_last_extracted_text', '')
+                }
                 
-                # Find contours
-                contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                logger.info(f"📊 Found {len(contours)} contours with {method_name}")
+                # Use the enhanced property detection
+                shapes = enhanced_detector.detect_property_boundaries(image, text_info)
                 
-                # Filter and process contours with enhanced criteria for aerial maps
-                method_shapes = self.filter_property_contours_enhanced(contours, gray.shape)
-                all_contours.extend(method_shapes)
-                logger.info(f"✅ {method_name} contributed {len(method_shapes)} valid shapes")
+                if shapes:
+                    logger.info(f"🎯 Enhanced detection found {len(shapes)} property candidates")
+                    return shapes
+                else:
+                    logger.warning("⚠️ Enhanced detection found no candidates, falling back to basic methods")
+                    
+            except ImportError as e:
+                logger.warning(f"⚠️ Enhanced detector not available: {e}, using fallback")
+            except Exception as e:
+                logger.warning(f"⚠️ Enhanced detection failed: {e}, using fallback")
             
-            # Remove duplicate shapes
-            unique_shapes = self.remove_duplicate_shapes_enhanced(all_contours)
-            logger.info(f"🎯 Final unique shapes: {len(unique_shapes)}")
-            
-            return unique_shapes
+            # Use the proven fallback method
+            return self._fallback_boundary_detection(image)
             
         except Exception as e:
-            logger.error(f"💥 Shape detection error: {e}")
+            logger.error(f"💥 Boundary detection error: {e}")
             logger.error(traceback.format_exc())
             return []
+    
+    def _fallback_boundary_detection(self, image):
+        """Fallback boundary detection using original methods"""
+        logger.info("🔄 Using fallback boundary detection...")
+        
+        shapes = []
+        
+        # Convert to grayscale
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        logger.info(f"📏 Image dimensions: {gray.shape}")
+        
+        # Use proven edge detection parameters from diagnostic
+        edge_methods = [
+            ("Canny_very_sensitive", lambda img: cv2.Canny(img, 10, 50)),  # Best from diagnostic
+            ("Canny_conservative", lambda img: cv2.Canny(img, 30, 90)),
+            ("Canny_standard", lambda img: cv2.Canny(img, 50, 150)),
+            ("Canny_aggressive", lambda img: cv2.Canny(img, 100, 200)),
+        ]
+        
+        all_contours = []
+        
+        for method_name, edge_func in edge_methods:
+            logger.info(f"🔍 Trying edge detection method: {method_name}")
+            
+            # Apply Gaussian blur to reduce noise
+            blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+            
+            # Apply edge detection
+            edges = edge_func(blurred)
+            
+            # Find contours
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            logger.info(f"📊 Found {len(contours)} contours with {method_name}")
+            
+            # Filter and process contours with enhanced criteria for aerial maps
+            method_shapes = self.filter_property_contours_enhanced(contours, gray.shape)
+            all_contours.extend(method_shapes)
+            logger.info(f"✅ {method_name} contributed {len(method_shapes)} valid shapes")
+        
+        # Remove duplicate shapes
+        unique_shapes = self.remove_duplicate_shapes_enhanced(all_contours)
+        logger.info(f"🎯 Final unique shapes: {len(unique_shapes)}")
+        
+        return unique_shapes
     
     def filter_property_contours_enhanced(self, contours, image_shape):
         """Enhanced contour filtering optimized for aerial property maps"""
         logger.debug("🔍 Enhanced filtering contours for property boundaries...")
         
         height, width = image_shape
-        min_area = (width * height) * 0.0005  # Reduced minimum area for smaller properties
-        max_area = (width * height) * 0.3     # Reduced maximum area
+        min_area = (width * height) * 0.0001  # Further reduced minimum area to match diagnostic findings
+        max_area = (width * height) * 0.4     # Increased maximum area
         
         property_shapes = []
         
@@ -597,8 +636,8 @@ class AdvancedParcelMapProcessor:
         return unique_shapes
     
     def shapes_to_coordinates_advanced(self, shapes, base_coords, image_shape):
-        """Advanced conversion of shapes to geographical coordinates"""
-        logger.info("📐 Converting shapes to geographical coordinates...")
+        """Advanced conversion of shapes to geographical coordinates using enhanced methods"""
+        logger.info("📐 Converting shapes to geographical coordinates with advanced validation...")
         
         coordinates_list = []
         
@@ -607,66 +646,104 @@ class AdvancedParcelMapProcessor:
                 logger.warning("⚠️ No shapes provided for coordinate conversion")
                 return coordinates_list
             
-            if not base_coords:
-                logger.warning("⚠️ No base coordinates available - using estimated coordinates")
-                # Use a default center point for the US if no base coords
-                base_coords = {
-                    "latitude": 39.8283,  # Geographic center of US
-                    "longitude": -98.5795,
-                    "address": "Estimated center point"
+            # Try using the advanced processor for coordinate calculation
+            try:
+                from advanced_parcel_processor import AdvancedParcelProcessor
+                
+                advanced_processor = AdvancedParcelProcessor()
+                
+                # Prepare location information
+                location_info = {
+                    "extracted_text": getattr(self, '_last_extracted_text', ''),
+                    "streets": getattr(self, '_last_location_info', {}).get('streets', []),
+                    "county": getattr(self, '_last_location_info', {}).get('county'),
+                    "state": getattr(self, '_last_location_info', {}).get('state'),
+                    "coordinates": getattr(self, '_last_location_info', {}).get('coordinates', [])
                 }
-            
-            base_lat = base_coords["latitude"]
-            base_lon = base_coords["longitude"]
-            height, width = image_shape[:2]
-            
-            logger.info(f"📍 Base coordinates: {base_lat}, {base_lon}")
-            logger.info(f"📏 Image dimensions: {width}x{height}")
-            
-            # Estimate scale (this is a rough approximation - in production would need more sophisticated methods)
-            # Assume the image covers roughly 0.01 degrees (about 1km at mid-latitudes)
-            estimated_coverage_degrees = 0.01
-            pixels_per_degree_lat = height / estimated_coverage_degrees
-            pixels_per_degree_lon = width / estimated_coverage_degrees
-            
-            logger.info(f"📏 Estimated scale: {pixels_per_degree_lat:.1f} pixels/degree lat, {pixels_per_degree_lon:.1f} pixels/degree lon")
-            
-            for i, shape in enumerate(shapes):
-                logger.info(f"🏠 Processing shape {i+1}/{len(shapes)} with {len(shape)} vertices")
-                shape_coords = []
                 
-                # Convert pixel coordinates to lat/lon
-                for j, point in enumerate(shape.reshape(-1, 2)):
-                    x, y = point
-                    
-                    # Convert to relative position from center
-                    center_x, center_y = width / 2, height / 2
-                    rel_x = (x - center_x) / pixels_per_degree_lon
-                    rel_y = (center_y - y) / pixels_per_degree_lat  # Y is flipped in images
-                    
-                    # Calculate final coordinates
-                    latitude = base_lat + rel_y
-                    longitude = base_lon + rel_x
-                    
-                    coord = {
-                        "latitude": round(latitude, 6),
-                        "longitude": round(longitude, 6),
-                        "pixel_x": int(x),
-                        "pixel_y": int(y),
-                        "vertex_index": j
-                    }
-                    shape_coords.append(coord)
-                    logger.debug(f"📍 Vertex {j}: ({x}, {y}) -> ({latitude:.6f}, {longitude:.6f})")
+                # Use advanced coordinate calculation
+                advanced_coords = advanced_processor.calculate_precise_coordinates(
+                    shapes, location_info, image_shape
+                )
                 
-                coordinates_list.append(shape_coords)
-                logger.info(f"✅ Shape {i+1} converted to {len(shape_coords)} coordinate points")
+                if advanced_coords:
+                    logger.info(f"🎯 Advanced coordinate calculation successful: {len(advanced_coords)} shapes")
+                    return advanced_coords
+                else:
+                    logger.warning("⚠️ Advanced coordinate calculation returned no results, using fallback")
+                    
+            except Exception as e:
+                logger.warning(f"⚠️ Advanced coordinate calculation failed: {e}, using fallback")
             
-            logger.info(f"🎉 Successfully converted {len(coordinates_list)} shapes to coordinates")
+            # Fallback to original method
+            return self._fallback_coordinate_calculation(shapes, base_coords, image_shape)
             
         except Exception as e:
             logger.error(f"💥 Coordinate conversion error: {e}")
             logger.error(traceback.format_exc())
+            return []
+    
+    def _fallback_coordinate_calculation(self, shapes, base_coords, image_shape):
+        """Fallback coordinate calculation using original method"""
+        logger.info("🔄 Using fallback coordinate calculation...")
         
+        coordinates_list = []
+        
+        if not base_coords:
+            logger.warning("⚠️ No base coordinates available - using estimated coordinates")
+            # Use a default center point for the US if no base coords
+            base_coords = {
+                "latitude": 39.8283,  # Geographic center of US
+                "longitude": -98.5795,
+                "address": "Estimated center point"
+            }
+        
+        base_lat = base_coords["latitude"]
+        base_lon = base_coords["longitude"]
+        height, width = image_shape[:2]
+        
+        logger.info(f"📍 Base coordinates: {base_lat}, {base_lon}")
+        logger.info(f"📏 Image dimensions: {width}x{height}")
+        
+        # Estimate scale (this is a rough approximation - in production would need more sophisticated methods)
+        # Assume the image covers roughly 0.01 degrees (about 1km at mid-latitudes)
+        estimated_coverage_degrees = 0.01
+        pixels_per_degree_lat = height / estimated_coverage_degrees
+        pixels_per_degree_lon = width / estimated_coverage_degrees
+        
+        logger.info(f"📏 Estimated scale: {pixels_per_degree_lat:.1f} pixels/degree lat, {pixels_per_degree_lon:.1f} pixels/degree lon")
+        
+        for i, shape in enumerate(shapes):
+            logger.info(f"🏠 Processing shape {i+1}/{len(shapes)} with {len(shape)} vertices")
+            shape_coords = []
+            
+            # Convert pixel coordinates to lat/lon
+            for j, point in enumerate(shape.reshape(-1, 2)):
+                x, y = point
+                
+                # Convert to relative position from center
+                center_x, center_y = width / 2, height / 2
+                rel_x = (x - center_x) / pixels_per_degree_lon
+                rel_y = (center_y - y) / pixels_per_degree_lat  # Y is flipped in images
+                
+                # Calculate final coordinates
+                latitude = base_lat + rel_y
+                longitude = base_lon + rel_x
+                
+                coord = {
+                    "latitude": round(latitude, 6),
+                    "longitude": round(longitude, 6),
+                    "pixel_x": int(x),
+                    "pixel_y": int(y),
+                    "vertex_index": j
+                }
+                shape_coords.append(coord)
+                logger.debug(f"📍 Vertex {j}: ({x}, {y}) -> ({latitude:.6f}, {longitude:.6f})")
+            
+            coordinates_list.append(shape_coords)
+            logger.info(f"✅ Shape {i+1} converted to {len(shape_coords)} coordinate points")
+        
+        logger.info(f"🎉 Successfully converted {len(coordinates_list)} shapes to coordinates")
         return coordinates_list
 
 # Initialize processor
