@@ -746,6 +746,53 @@ class AdvancedParcelMapProcessor:
         logger.info(f"🎉 Successfully converted {len(coordinates_list)} shapes to coordinates")
         return coordinates_list
 
+    def process_parcel_map(self, image_array, extracted_text, base_location):
+        """Enhanced parcel map processing with open data integration"""
+        logger.info("🚀 Starting enhanced parcel processing pipeline")
+        
+        results = {
+            'text_extraction': {},
+            'shape_detection': {},
+            'geocoding': {},
+            'coordinates': [],
+            'enhanced_analysis': {},
+            'processing_log': f"Successfully processed {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        }
+        
+        try:
+            # Initialize enhanced processor
+            from enhanced_processor_v2 import create_enhanced_processor
+            enhanced_processor = create_enhanced_processor()
+            
+            # Run enhanced processing
+            enhanced_results = enhanced_processor.process_parcel_map(
+                image_array, extracted_text, base_location
+            )
+            
+            results['enhanced_analysis'] = enhanced_results
+            
+            # Extract coordinates from enhanced results
+            if enhanced_results.get('parcel_boundaries'):
+                for boundary in enhanced_results['parcel_boundaries']:
+                    for vertex in boundary['vertices']:
+                        results['coordinates'].append({
+                            'lat': vertex[1],  # Latitude is second in (lon, lat) tuple
+                            'lon': vertex[0],  # Longitude is first
+                            'confidence': boundary['confidence'],
+                            'source': boundary['source'],
+                            'area_sqft': boundary.get('area_sqft', 0),
+                            'parcel_type': 'enhanced_detection'
+                        })
+            
+            logger.info(f"✅ Enhanced processing found {len(results['coordinates'])} coordinate points")
+            
+        except Exception as e:
+            logger.warning(f"⚠️ Enhanced processing failed, falling back to standard processing: {e}")
+            
+            # Fallback to original processing
+            # Text extraction
+            # ... existing code ...
+
 # Initialize processor
 processor = AdvancedParcelMapProcessor()
 

@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-06-06 12:55:48",
+  "total_tests": 7,
+  "passed_tests": 5,
+  "success_rate": 71.42857142857143,
+  "detailed_results": {
+    "server_connectivity": true,
+    "basic_processing": true,
+    "enhanced_processing": true,
+    "coordinate_systems": true,
+    "open_data_integration": true,
+    "shape_matching": false,
+    "error_handling": false
+  }
+}

@@ -10,7 +10,8 @@ requests>=2.31.0
 geopy>=2.4.0
 Werkzeug>=2.3.0
 python-dotenv>=1.0.0
-shapely>=2.0.0
+shapely>=2.0.2
 scikit-image>=0.21.0
-matplotlib>=3.7.0
-flask-cors>=4.0.0 
+matplotlib>=3.8.2
+flask-cors>=4.0.0
+pyproj==3.6.1 
