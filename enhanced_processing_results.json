@@ -1,6 +1,6 @@
 {
   "success": true,
-  "processing_timestamp": "2025-06-06T13:25:05.840263",
+  "processing_timestamp": "2025-06-06T13:44:50.935023",
   "image_shape": [
     2550,
     3300,
@@ -11,17 +11,17 @@
     "location_info": {
       "primary_address": "324 Dolan Road",
       "streets": [
-        "315 DOLAN ROAD",
-        "DOLAN ROAD",
-        "175 JUANITA WAY",
-        "Dolan Road",
-        "ASH MOUNTAIN DRIVE",
-        "JUANITA WAY",
-        "MOUNTAIN DRIVE",
         "312 DOLAN ROAD A A JUANITA WAY",
+        "JUANITA WAY",
+        "315 DOLAN ROAD",
+        "312 DOLAN ROAD",
+        "MOUNTAIN DRIVE",
+        "DOLAN ROAD",
         "324 Dolan Road",
         "DOLAN ROAD A A JUANITA WAY",
-        "312 DOLAN ROAD"
+        "ASH MOUNTAIN DRIVE",
+        "Dolan Road",
+        "175 JUANITA WAY"
       ],
       "county": "Cowlitz County",
       "state": "WA",

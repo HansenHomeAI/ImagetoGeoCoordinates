@@ -3,7 +3,7 @@ import json
 import uuid
 import logging
 import traceback
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, Response
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
@@ -21,6 +21,11 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from datetime import datetime
+from flask_cors import CORS
+import queue
+import threading
+import time
+from typing import Optional, Dict, Any
 
 # Configure comprehensive logging
 logging.basicConfig(
@@ -41,6 +46,9 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['PROCESSED_FOLDER'] = 'processed'
 
+# Initialize CORS
+CORS(app)
+
 # Create directories if they don't exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
@@ -49,6 +57,29 @@ os.makedirs('static', exist_ok=True)
 # Initialize OCR readers lazily to avoid blocking server startup
 easyocr_reader = None
 geolocator = Nominatim(user_agent="ImagetoGeoCoordinates-v2.0")
+
+# Global progress tracking
+progress_queues = {}
+progress_data = {}
+
+# Import the new validation systems
+from advanced_coordinate_validator import create_advanced_validator
+from coordinate_accuracy_tester import create_accuracy_tester
+
+def send_progress_update(session_id, step, progress, message):
+    """Send progress update to specific session"""
+    if session_id in progress_queues:
+        progress_info = {
+            'step': step,
+            'progress': progress,
+            'message': message,
+            'timestamp': datetime.now().isoformat()
+        }
+        try:
+            progress_queues[session_id].put(progress_info, timeout=1)
+            progress_data[session_id] = progress_info
+        except queue.Full:
+            pass  # Queue is full, skip this update
 
 def get_easyocr_reader():
     global easyocr_reader
@@ -138,6 +169,128 @@ class AdvancedParcelMapProcessor:
             error_msg = f"Processing failed: {str(e)}"
             logger.error(f"💥 {error_msg}")
             logger.error(traceback.format_exc())
+            return {"error": error_msg, "traceback": traceback.format_exc()}
+
+    def process_image_with_progress(self, image_path, session_id):
+        """Enhanced processing pipeline with real-time progress updates and advanced validation"""
+        logger.info(f"🚀 Starting enhanced parcel map processing with progress tracking for: {image_path}")
+        
+        try:
+            # Step 1: Load and preprocess image
+            send_progress_update(session_id, "loading", 15, "Loading and preprocessing image...")
+            logger.info("📷 Step 1: Loading and preprocessing image...")
+            self.current_image = self.load_image(image_path)
+            if self.current_image is None:
+                logger.error("❌ Failed to load image")
+                return {"error": "Could not load image"}
+            
+            image_shape = self.current_image.shape[:2]
+            logger.info(f"✅ Image loaded successfully - Shape: {image_shape[1]}x{image_shape[0]} pixels")
+            
+            # Step 2: Extract text using multiple OCR engines
+            send_progress_update(session_id, "text_extraction", 25, "Extracting text with dual OCR engines (Tesseract + EasyOCR)...")
+            logger.info("🔍 Step 2: Extracting text using OCR...")
+            self.extracted_text = self.extract_text_comprehensive(self.current_image)
+            logger.info(f"📝 Extracted text length: {len(self.extracted_text)} characters")
+            
+            # Store for advanced processor access
+            self._last_extracted_text = self.extracted_text
+            
+            # Step 3: Enhanced location analysis
+            send_progress_update(session_id, "location_analysis", 35, "Analyzing location information and addresses...")
+            logger.info("🌍 Step 3: Analyzing location clues...")
+            location_info = self.extract_location_clues(self.extracted_text)
+            logger.info(f"🏠 Location info found: {location_info}")
+            
+            # Store for advanced processor access
+            self._last_location_info = location_info
+            
+            # Step 4: Enhanced geocoding
+            send_progress_update(session_id, "geocoding", 45, "Geocoding property location with enhanced validation...")
+            logger.info("🗺️ Step 4: Enhanced geocoding...")
+            base_coords = self.geocode_location(location_info)
+            logger.info(f"📍 Base coordinates: {base_coords}")
+            
+            # Step 5: Enhanced shape detection
+            send_progress_update(session_id, "shape_detection", 60, "Detecting property boundaries with advanced computer vision...")
+            logger.info("🔍 Step 5: Detecting property boundaries...")
+            shapes = self.detect_property_boundaries_advanced(self.current_image)
+            logger.info(f"🏠 Detected {len(shapes)} potential property shapes")
+            
+            # Step 6: Initial coordinate conversion
+            send_progress_update(session_id, "coordinate_conversion", 75, "Converting pixel coordinates to geo-coordinates...")
+            logger.info("📐 Step 6: Converting shapes to coordinates...")
+            initial_coordinates = self.shapes_to_coordinates_advanced(shapes, base_coords, image_shape)
+            logger.info(f"📊 Generated {len(initial_coordinates)} initial coordinate sets")
+            
+            # NEW: Step 7: Advanced validation and correction
+            send_progress_update(session_id, "validation", 85, "Validating and correcting coordinate accuracy...")
+            logger.info("🔍 Step 7: Advanced coordinate validation and correction...")
+            
+            # Create validation systems
+            validator = create_advanced_validator()
+            accuracy_tester = create_accuracy_tester()
+            
+            # Prepare coordinate data for validation
+            coordinate_data = {
+                'coordinate_conversion': {'coordinate_sets': initial_coordinates},
+                'geocoding': base_coords,
+                'shape_detection': {'shapes_detected': len(shapes)},
+                'text_extraction': {'extracted_text': self.extracted_text}
+            }
+            
+            # Run validation and correction
+            validation_results = validator.validate_and_correct_coordinates(
+                initial_coordinates, self.extracted_text, image_shape
+            )
+            
+            # Run comprehensive accuracy testing
+            accuracy_results = accuracy_tester.run_comprehensive_test(
+                coordinate_data, self.extracted_text, image_path
+            )
+            
+            # Use corrected coordinates if available and better
+            final_coordinates = validation_results.get('corrected_coordinates', initial_coordinates)
+            if not final_coordinates:
+                final_coordinates = initial_coordinates
+            
+            send_progress_update(session_id, "finalizing", 95, "Finalizing results and preparing enhanced output...")
+            
+            validation_score = validation_results.get('validation_result', {}).get('validation_score', 0)
+            accuracy_score = accuracy_results.get('overall_accuracy', {}).get('overall_score', 0)
+            accuracy_grade = accuracy_results.get('overall_accuracy', {}).get('grade', 'F')
+            corrections_applied = validation_results.get('corrections_applied', False)
+            
+            logger.info(f"🎯 Validation score: {validation_score:.2f}")
+            logger.info(f"🧪 Overall accuracy: {accuracy_score:.2f} (Grade: {accuracy_grade})")
+            logger.info(f"🔧 Corrections applied: {corrections_applied}")
+            
+            result = {
+                "success": True,
+                "extracted_text": self.extracted_text,
+                "location_info": location_info,
+                "base_coordinates": base_coords,
+                "property_coordinates": final_coordinates,
+                "detected_shapes": len(shapes),
+                "processing_summary": {
+                    "total_shapes": len(final_coordinates),
+                    "total_coordinates": sum(len(cs.get('coordinates', [])) if isinstance(cs, dict) else len(cs) for cs in final_coordinates),
+                    "validation_score": float(validation_score),
+                    "accuracy_score": float(accuracy_score),
+                    "accuracy_grade": str(accuracy_grade),
+                    "corrections_applied": bool(corrections_applied)
+                },
+                "processing_log": f"Enhanced processing completed {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            }
+            
+            logger.info("🎉 Enhanced processing completed successfully!")
+            return result
+            
+        except Exception as e:
+            error_msg = f"Enhanced processing failed: {str(e)}"
+            logger.error(f"💥 {error_msg}")
+            logger.error(traceback.format_exc())
+            send_progress_update(session_id, "error", 0, f"Processing failed: {str(e)}")
             return {"error": error_msg, "traceback": traceback.format_exc()}
     
     def load_image(self, image_path):
@@ -805,6 +958,9 @@ def index():
 def upload_file():
     logger.info("📤 File upload request received")
     
+    # Generate session ID for progress tracking
+    session_id = str(uuid.uuid4())
+    
     if 'file' not in request.files:
         logger.error("❌ No file provided in request")
         return jsonify({'error': 'No file provided'}), 400
@@ -823,9 +979,13 @@ def upload_file():
             logger.info(f"💾 Saving uploaded file: {unique_filename}")
             file.save(filepath)
             
-            # Process the image
+            # Initialize progress tracking
+            progress_queues[session_id] = queue.Queue(maxsize=50)
+            send_progress_update(session_id, "upload", 10, "File uploaded successfully")
+            
+            # Process the image with progress updates
             logger.info(f"🚀 Starting processing for: {unique_filename}")
-            result = processor.process_image(filepath)
+            result = processor.process_image_with_progress(filepath, session_id)
             
             # Clean up uploaded file
             try:
@@ -834,6 +994,11 @@ def upload_file():
             except:
                 pass
             
+            send_progress_update(session_id, "complete", 100, "Processing completed successfully!")
+            
+            # Add session ID to result
+            result['session_id'] = session_id
+            
             logger.info("✅ Request processing completed successfully")
             return jsonify(result)
             
@@ -841,7 +1006,8 @@ def upload_file():
             error_msg = f'Processing failed: {str(e)}'
             logger.error(f"💥 {error_msg}")
             logger.error(traceback.format_exc())
-            return jsonify({'error': error_msg}), 500
+            send_progress_update(session_id, "error", 0, f"Error: {error_msg}")
+            return jsonify({'error': error_msg, 'session_id': session_id}), 500
     
     logger.error(f"❌ Invalid file type: {file.filename}")
     return jsonify({'error': 'Invalid file type'}), 400
@@ -850,6 +1016,42 @@ def upload_file():
 def health():
     logger.debug("💓 Health check requested")
     return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
+
+@app.route('/progress/<session_id>')
+def progress_stream(session_id):
+    """Server-Sent Events endpoint for progress updates"""
+    def generate():
+        # Create queue for this session if it doesn't exist
+        if session_id not in progress_queues:
+            progress_queues[session_id] = queue.Queue(maxsize=50)
+        
+        q = progress_queues[session_id]
+        
+        try:
+            while True:
+                try:
+                    # Get progress update with timeout
+                    progress_info = q.get(timeout=30)
+                    yield f"data: {json.dumps(progress_info)}\n\n"
+                    
+                    # Check if processing is complete
+                    if progress_info.get('progress', 0) >= 100:
+                        break
+                        
+                except queue.Empty:
+                    # Send keep-alive
+                    yield f"data: {json.dumps({'keep_alive': True})}\n\n"
+                    
+        except GeneratorExit:
+            pass
+        finally:
+            # Clean up
+            if session_id in progress_queues:
+                del progress_queues[session_id]
+            if session_id in progress_data:
+                del progress_data[session_id]
+    
+    return Response(generate(), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     logger.info("🚀 Starting Image to Geo Coordinates application...")
