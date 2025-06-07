@@ -1,0 +1,1249 @@
+{
+  "base_coordinates": {
+    "latitude": 46.1998625,
+    "longitude": -122.6931507,
+    "address": "Cowlitz County, Washington, United States",
+    "confidence": 0.9999999999999999,
+    "method": "geocoding",
+    "query": "Cowlitz County, Washington"
+  },
+  "property_coordinates": [
+    {
+      "shape_id": 0,
+      "coordinates": [
+        {
+          "latitude": 46.189380249696576,
+          "longitude": -122.70073046119543,
+          "pixel_x": 557,
+          "pixel_y": 2335,
+          "offset_meters": {
+            "dx": -585.0356764254385,
+            "dy": -1165.156866118421
+          },
+          "original_lat": 46.08551755837595,
+          "original_lon": -122.62856551863757
+        },
+        {
+          "latitude": 46.18915100975567,
+          "longitude": -122.70073046119543,
+          "pixel_x": 557,
+          "pixel_y": 2373,
+          "offset_meters": {
+            "dx": -585.0356764254385,
+            "dy": -1190.6380827850878
+          },
+          "original_lat": 46.08528831425098,
+          "original_lon": -122.62856551863757
+        },
+        {
+          "latitude": 46.189120846605555,
+          "longitude": -122.70070439780012,
+          "pixel_x": 560,
+          "pixel_y": 2378,
+          "offset_meters": {
+            "dx": -583.0240014254385,
+            "dy": -1193.9908744517545
+          },
+          "original_lat": 46.08525815055033,
+          "original_lon": -122.62853950421604
+        },
+        {
+          "latitude": 46.189120846605555,
+          "longitude": -122.70001806172374,
+          "pixel_x": 639,
+          "pixel_y": 2378,
+          "offset_meters": {
+            "dx": -530.0498930921052,
+            "dy": -1193.9908744517545
+          },
+          "original_lat": 46.08525815055033,
+          "original_lon": -122.62785445778202
+        },
+        {
+          "latitude": 46.189138944495625,
+          "longitude": -122.69999199832843,
+          "pixel_x": 642,
+          "pixel_y": 2375,
+          "offset_meters": {
+            "dx": -528.0382180921052,
+            "dy": -1191.9791994517545
+          },
+          "original_lat": 46.08527624877072,
+          "original_lon": -122.62782844336047
+        },
+        {
+          "latitude": 46.1893862823266,
+          "longitude": -122.7000093739253,
+          "pixel_x": 640,
+          "pixel_y": 2334,
+          "offset_meters": {
+            "dx": -529.3793347587718,
+            "dy": -1164.4863077850878
+          },
+          "original_lat": 46.08552359111608,
+          "original_lon": -122.62784578630817
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 1,
+      "coordinates": [
+        {
+          "latitude": 46.189844762208416,
+          "longitude": -122.70073046119543,
+          "pixel_x": 557,
+          "pixel_y": 2258,
+          "offset_meters": {
+            "dx": -585.0356764254385,
+            "dy": -1113.5238744517544
+          },
+          "original_lat": 46.085982079366005,
+          "original_lon": -122.62856551863757
+        },
+        {
+          "latitude": 46.18960948963748,
+          "longitude": -122.700721773397,
+          "pixel_x": 558,
+          "pixel_y": 2297,
+          "offset_meters": {
+            "dx": -584.3651180921053,
+            "dy": -1139.6756494517545
+          },
+          "original_lat": 46.08574680250091,
+          "original_lon": -122.62855684716372
+        },
+        {
+          "latitude": 46.18960948963748,
+          "longitude": -122.70000068612687,
+          "pixel_x": 641,
+          "pixel_y": 2297,
+          "offset_meters": {
+            "dx": -528.7087764254386,
+            "dy": -1139.6756494517545
+          },
+          "original_lat": 46.08574680250091,
+          "original_lon": -122.62783711483432
+        },
+        {
+          "latitude": 46.189844762208416,
+          "longitude": -122.69999199832843,
+          "pixel_x": 642,
+          "pixel_y": 2258,
+          "offset_meters": {
+            "dx": -528.0382180921052,
+            "dy": -1113.5238744517544
+          },
+          "original_lat": 46.085982079366005,
+          "original_lon": -122.62782844336047
+        },
+        {
+          "latitude": 46.189862860098486,
+          "longitude": -122.70001806172374,
+          "pixel_x": 639,
+          "pixel_y": 2255,
+          "offset_meters": {
+            "dx": -530.0498930921052,
+            "dy": -1111.5121994517544
+          },
+          "original_lat": 46.08600017758639,
+          "original_lon": -122.62785445778202
+        },
+        {
+          "latitude": 46.189862860098486,
+          "longitude": -122.70071308559857,
+          "pixel_x": 559,
+          "pixel_y": 2255,
+          "offset_meters": {
+            "dx": -583.6945597587719,
+            "dy": -1111.5121994517544
+          },
+          "original_lat": 46.08600017758639,
+          "original_lon": -122.62854817568989
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 2,
+      "coordinates": [
+        {
+          "latitude": 46.18968188119777,
+          "longitude": -122.70423164396489,
+          "pixel_x": 154,
+          "pixel_y": 2285,
+          "offset_meters": {
+            "dx": -855.270684758772,
+            "dy": -1131.6289494517544
+          },
+          "original_lat": 46.08581919538248,
+          "original_lon": -122.63206012259842
+        },
+        {
+          "latitude": 46.18944660862684,
+          "longitude": -122.70423164396489,
+          "pixel_x": 154,
+          "pixel_y": 2324,
+          "offset_meters": {
+            "dx": -855.270684758772,
+            "dy": -1157.7807244517544
+          },
+          "original_lat": 46.08558391851738,
+          "original_lon": -122.63206012259842
+        },
+        {
+          "latitude": 46.18944660862684,
+          "longitude": -122.7035974346791,
+          "pixel_x": 227,
+          "pixel_y": 2324,
+          "offset_meters": {
+            "dx": -806.3199264254386,
+            "dy": -1157.7807244517544
+          },
+          "original_lat": 46.08558391851738,
+          "original_lon": -122.6314271050075
+        },
+        {
+          "latitude": 46.18968188119777,
+          "longitude": -122.7035974346791,
+          "pixel_x": 227,
+          "pixel_y": 2285,
+          "offset_meters": {
+            "dx": -806.3199264254386,
+            "dy": -1131.6289494517544
+          },
+          "original_lat": 46.08581919538248,
+          "original_lon": -122.6314271050075
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 3,
+      "coordinates": [
+        {
+          "latitude": 46.202802851499655,
+          "longitude": -122.69564809911076,
+          "pixel_x": 1142,
+          "pixel_y": 110,
+          "offset_meters": {
+            "dx": -192.75905142543854,
+            "dy": 326.8354255482456
+          },
+          "original_lat": 46.09894040516655,
+          "original_lon": -122.62349270643635
+        },
+        {
+          "latitude": 46.20277268834953,
+          "longitude": -122.69574366489354,
+          "pixel_x": 1131,
+          "pixel_y": 115,
+          "offset_meters": {
+            "dx": -200.1351930921052,
+            "dy": 323.4826338815789
+          },
+          "original_lat": 46.0989102414659,
+          "original_lon": -122.62358809264867
+        },
+        {
+          "latitude": 46.20273649256939,
+          "longitude": -122.69578710388572,
+          "pixel_x": 1126,
+          "pixel_y": 121,
+          "offset_meters": {
+            "dx": -203.48798475877186,
+            "dy": 319.4592838815789
+          },
+          "original_lat": 46.09887404502511,
+          "original_lon": -122.62363145001792
+        },
+        {
+          "latitude": 46.202664101009105,
+          "longitude": -122.69582185507946,
+          "pixel_x": 1122,
+          "pixel_y": 133,
+          "offset_meters": {
+            "dx": -206.1702180921052,
+            "dy": 311.41258388157894
+          },
+          "original_lat": 46.09880165214355,
+          "original_lon": -122.62366613591331
+        },
+        {
+          "latitude": 46.20257964418877,
+          "longitude": -122.69581316728103,
+          "pixel_x": 1123,
+          "pixel_y": 147,
+          "offset_meters": {
+            "dx": -205.49965975877186,
+            "dy": 302.0247672149123
+          },
+          "original_lat": 46.09871719378172,
+          "original_lon": -122.62365746443946
+        },
+        {
+          "latitude": 46.20251931788854,
+          "longitude": -122.69576972828885,
+          "pixel_x": 1128,
+          "pixel_y": 157,
+          "offset_meters": {
+            "dx": -202.1468680921052,
+            "dy": 295.31918388157897
+          },
+          "original_lat": 46.09865686638041,
+          "original_lon": -122.62361410707022
+        },
+        {
+          "latitude": 46.202471056848346,
+          "longitude": -122.6956567869092,
+          "pixel_x": 1141,
+          "pixel_y": 165,
+          "offset_meters": {
+            "dx": -193.42960975877187,
+            "dy": 289.9547172149123
+          },
+          "original_lat": 46.098608604459365,
+          "original_lon": -122.6235013779102
+        },
+        {
+          "latitude": 46.202471056848346,
+          "longitude": -122.69554384552953,
+          "pixel_x": 1154,
+          "pixel_y": 165,
+          "offset_meters": {
+            "dx": -184.71235142543853,
+            "dy": 289.9547172149123
+          },
+          "original_lat": 46.098608604459365,
+          "original_lon": -122.62338864875016
+        },
+        {
+          "latitude": 46.202507252628486,
+          "longitude": -122.6954395919483,
+          "pixel_x": 1166,
+          "pixel_y": 159,
+          "offset_meters": {
+            "dx": -176.66565142543854,
+            "dy": 293.9780672149123
+          },
+          "original_lat": 46.09864480090015,
+          "original_lon": -122.62328459106399
+        },
+        {
+          "latitude": 46.20254948103865,
+          "longitude": -122.69539615295614,
+          "pixel_x": 1171,
+          "pixel_y": 152,
+          "offset_meters": {
+            "dx": -173.31285975877188,
+            "dy": 298.6719755482456
+          },
+          "original_lat": 46.09868703008107,
+          "original_lon": -122.62324123369474
+        },
+        {
+          "latitude": 46.202682198899176,
+          "longitude": -122.69537877735927,
+          "pixel_x": 1173,
+          "pixel_y": 130,
+          "offset_meters": {
+            "dx": -171.97174309210519,
+            "dy": 313.42425888157896
+          },
+          "original_lat": 46.09881975036394,
+          "original_lon": -122.62322389074706
+        },
+        {
+          "latitude": 46.20274252519942,
+          "longitude": -122.695413528553,
+          "pixel_x": 1169,
+          "pixel_y": 120,
+          "offset_meters": {
+            "dx": -174.65397642543854,
+            "dy": 320.1298422149123
+          },
+          "original_lat": 46.098880077765244,
+          "original_lon": -122.62325857664244
+        },
+        {
+          "latitude": 46.20277872097956,
+          "longitude": -122.69546565534361,
+          "pixel_x": 1163,
+          "pixel_y": 114,
+          "offset_meters": {
+            "dx": -178.67732642543854,
+            "dy": 324.1531922149123
+          },
+          "original_lat": 46.098916274206026,
+          "original_lon": -122.62331060548553
+        },
+        {
+          "latitude": 46.202802851499655,
+          "longitude": -122.69555253332797,
+          "pixel_x": 1153,
+          "pixel_y": 110,
+          "offset_meters": {
+            "dx": -185.38290975877186,
+            "dy": 326.8354255482456
+          },
+          "original_lat": 46.09894040516655,
+          "original_lon": -122.62339732022402
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 4,
+      "coordinates": [
+        {
+          "latitude": 46.20279681886963,
+          "longitude": -122.69269424764273,
+          "pixel_x": 1482,
+          "pixel_y": 111,
+          "offset_meters": {
+            "dx": 35.23078190789481,
+            "dy": 326.1648672149123
+          },
+          "original_lat": 46.09893437242642,
+          "original_lon": -122.62054440532795
+        },
+        {
+          "latitude": 46.202477089478364,
+          "longitude": -122.69269424764273,
+          "pixel_x": 1482,
+          "pixel_y": 164,
+          "offset_meters": {
+            "dx": 35.23078190789481,
+            "dy": 290.6252755482456
+          },
+          "original_lat": 46.098614637199496,
+          "original_lon": -122.62054440532795
+        },
+        {
+          "latitude": 46.202489154738416,
+          "longitude": -122.69240755029436,
+          "pixel_x": 1515,
+          "pixel_y": 162,
+          "offset_meters": {
+            "dx": 57.35920690789481,
+            "dy": 291.9663922149123
+          },
+          "original_lat": 46.09862670267976,
+          "original_lon": -122.62025824669095
+        },
+        {
+          "latitude": 46.20253138314858,
+          "longitude": -122.69234673570533,
+          "pixel_x": 1522,
+          "pixel_y": 155,
+          "offset_meters": {
+            "dx": 62.05311524122815,
+            "dy": 296.66030054824563
+          },
+          "original_lat": 46.09866893186067,
+          "original_lon": -122.62019754637402
+        },
+        {
+          "latitude": 46.20257964418877,
+          "longitude": -122.69232067231002,
+          "pixel_x": 1525,
+          "pixel_y": 147,
+          "offset_meters": {
+            "dx": 64.06479024122815,
+            "dy": 302.0247672149123
+          },
+          "original_lat": 46.09871719378172,
+          "original_lon": -122.62017153195247
+        },
+        {
+          "latitude": 46.20265806837908,
+          "longitude": -122.69231198451158,
+          "pixel_x": 1526,
+          "pixel_y": 134,
+          "offset_meters": {
+            "dx": 64.73534857456148,
+            "dy": 310.74202554824564
+          },
+          "original_lat": 46.09879561940342,
+          "original_lon": -122.62016286047862
+        },
+        {
+          "latitude": 46.20273045993937,
+          "longitude": -122.69233804790689,
+          "pixel_x": 1523,
+          "pixel_y": 122,
+          "offset_meters": {
+            "dx": 62.72367357456148,
+            "dy": 318.7887255482456
+          },
+          "original_lat": 46.09886801228498,
+          "original_lon": -122.62018887490017
+        },
+        {
+          "latitude": 46.20279078623961,
+          "longitude": -122.69243361368967,
+          "pixel_x": 1512,
+          "pixel_y": 112,
+          "offset_meters": {
+            "dx": 55.34753190789481,
+            "dy": 325.49430888157895
+          },
+          "original_lat": 46.09892833968629,
+          "original_lon": -122.62028426111249
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 5,
+      "coordinates": [
+        {
+          "latitude": 46.20279681886963,
+          "longitude": -122.689366820842,
+          "pixel_x": 1865,
+          "pixel_y": 111,
+          "offset_meters": {
+            "dx": 292.0546235745615,
+            "dy": 326.1648672149123
+          },
+          "original_lat": 46.09893437242642,
+          "original_lon": -122.61722323084406
+        },
+        {
+          "latitude": 46.202784753609585,
+          "longitude": -122.6894189476326,
+          "pixel_x": 1859,
+          "pixel_y": 113,
+          "offset_meters": {
+            "dx": 288.0312735745615,
+            "dy": 324.82375054824564
+          },
+          "original_lat": 46.09892230694616,
+          "original_lon": -122.61727525968715
+        },
+        {
+          "latitude": 46.2026882315292,
+          "longitude": -122.68942763543104,
+          "pixel_x": 1858,
+          "pixel_y": 129,
+          "offset_meters": {
+            "dx": 287.36071524122815,
+            "dy": 314.09481721491227
+          },
+          "original_lat": 46.09882578310407,
+          "original_lon": -122.617283931161
+        },
+        {
+          "latitude": 46.2027123620493,
+          "longitude": -122.68947976222165,
+          "pixel_x": 1852,
+          "pixel_y": 125,
+          "offset_meters": {
+            "dx": 283.33736524122816,
+            "dy": 316.7770505482456
+          },
+          "original_lat": 46.098849914064594,
+          "original_lon": -122.61733596000408
+        },
+        {
+          "latitude": 46.2027123620493,
+          "longitude": -122.68954926460914,
+          "pixel_x": 1844,
+          "pixel_y": 125,
+          "offset_meters": {
+            "dx": 277.9728985745615,
+            "dy": 316.7770505482456
+          },
+          "original_lat": 46.098849914064594,
+          "original_lon": -122.61740533179487
+        },
+        {
+          "latitude": 46.20269426415923,
+          "longitude": -122.68960139139975,
+          "pixel_x": 1838,
+          "pixel_y": 128,
+          "offset_meters": {
+            "dx": 273.9495485745615,
+            "dy": 314.76537554824563
+          },
+          "original_lat": 46.0988318158442,
+          "original_lon": -122.61745736063796
+        },
+        {
+          "latitude": 46.20265806837908,
+          "longitude": -122.68963614259349,
+          "pixel_x": 1834,
+          "pixel_y": 134,
+          "offset_meters": {
+            "dx": 271.2673152412282,
+            "dy": 310.74202554824564
+          },
+          "original_lat": 46.09879561940342,
+          "original_lon": -122.61749204653336
+        },
+        {
+          "latitude": 46.202543448408626,
+          "longitude": -122.68964483039193,
+          "pixel_x": 1833,
+          "pixel_y": 153,
+          "offset_meters": {
+            "dx": 270.5967569078948,
+            "dy": 298.0014172149123
+          },
+          "original_lat": 46.098680997340935,
+          "original_lon": -122.61750071800721
+        },
+        {
+          "latitude": 46.20251328525851,
+          "longitude": -122.68962745479506,
+          "pixel_x": 1835,
+          "pixel_y": 158,
+          "offset_meters": {
+            "dx": 271.9378735745615,
+            "dy": 294.6486255482456
+          },
+          "original_lat": 46.098650833640285,
+          "original_lon": -122.6174833750595
+        },
+        {
+          "latitude": 46.202471056848346,
+          "longitude": -122.68954926460914,
+          "pixel_x": 1844,
+          "pixel_y": 165,
+          "offset_meters": {
+            "dx": 277.9728985745615,
+            "dy": 289.9547172149123
+          },
+          "original_lat": 46.098608604459365,
+          "original_lon": -122.61740533179487
+        },
+        {
+          "latitude": 46.202471056848346,
+          "longitude": -122.68947107442322,
+          "pixel_x": 1853,
+          "pixel_y": 165,
+          "offset_meters": {
+            "dx": 284.0079235745615,
+            "dy": 289.9547172149123
+          },
+          "original_lat": 46.098608604459365,
+          "original_lon": -122.61732728853023
+        },
+        {
+          "latitude": 46.202489154738416,
+          "longitude": -122.68942763543104,
+          "pixel_x": 1858,
+          "pixel_y": 162,
+          "offset_meters": {
+            "dx": 287.36071524122815,
+            "dy": 291.9663922149123
+          },
+          "original_lat": 46.09862670267976,
+          "original_lon": -122.617283931161
+        },
+        {
+          "latitude": 46.202477089478364,
+          "longitude": -122.689366820842,
+          "pixel_x": 1865,
+          "pixel_y": 164,
+          "offset_meters": {
+            "dx": 292.0546235745615,
+            "dy": 290.6252755482456
+          },
+          "original_lat": 46.098614637199496,
+          "original_lon": -122.61722323084406
+        },
+        {
+          "latitude": 46.202489154738416,
+          "longitude": -122.68935813304356,
+          "pixel_x": 1866,
+          "pixel_y": 162,
+          "offset_meters": {
+            "dx": 292.7251819078948,
+            "dy": 291.9663922149123
+          },
+          "original_lat": 46.09862670267976,
+          "original_lon": -122.61721455937021
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 6,
+      "coordinates": [
+        {
+          "latitude": 46.20270029678925,
+          "longitude": -122.6866909789239,
+          "pixel_x": 2173,
+          "pixel_y": 127,
+          "offset_meters": {
+            "dx": 498.5865902412282,
+            "dy": 315.43593388157893
+          },
+          "original_lat": 46.09883784858433,
+          "original_lon": -122.6145524168988
+        },
+        {
+          "latitude": 46.20263997048901,
+          "longitude": -122.68673441791609,
+          "pixel_x": 2168,
+          "pixel_y": 137,
+          "offset_meters": {
+            "dx": 495.2337985745615,
+            "dy": 308.7303505482456
+          },
+          "original_lat": 46.098777521183024,
+          "original_lon": -122.61459577426804
+        },
+        {
+          "latitude": 46.202682198899176,
+          "longitude": -122.68657803754425,
+          "pixel_x": 2186,
+          "pixel_y": 130,
+          "offset_meters": {
+            "dx": 507.3038485745615,
+            "dy": 313.42425888157896
+          },
+          "original_lat": 46.09881975036394,
+          "original_lon": -122.61443968773877
+        },
+        {
+          "latitude": 46.202627905228965,
+          "longitude": -122.6865172229552,
+          "pixel_x": 2193,
+          "pixel_y": 139,
+          "offset_meters": {
+            "dx": 511.9977569078948,
+            "dy": 307.38923388157895
+          },
+          "original_lat": 46.09876545570276,
+          "original_lon": -122.61437898742183
+        },
+        {
+          "latitude": 46.202597742078844,
+          "longitude": -122.68669966672235,
+          "pixel_x": 2172,
+          "pixel_y": 144,
+          "offset_meters": {
+            "dx": 497.9160319078948,
+            "dy": 304.03644221491226
+          },
+          "original_lat": 46.09873529200211,
+          "original_lon": -122.61456108837264
+        },
+        {
+          "latitude": 46.20249518736844,
+          "longitude": -122.68673441791609,
+          "pixel_x": 2168,
+          "pixel_y": 161,
+          "offset_meters": {
+            "dx": 495.2337985745615,
+            "dy": 292.63695054824564
+          },
+          "original_lat": 46.09863273541989,
+          "original_lon": -122.61459577426804
+        },
+        {
+          "latitude": 46.202477089478364,
+          "longitude": -122.68644772056771,
+          "pixel_x": 2201,
+          "pixel_y": 164,
+          "offset_meters": {
+            "dx": 517.3622235745615,
+            "dy": 290.6252755482456
+          },
+          "original_lat": 46.098614637199496,
+          "original_lon": -122.61430961563104
+        },
+        {
+          "latitude": 46.2026882315292,
+          "longitude": -122.68647378396302,
+          "pixel_x": 2198,
+          "pixel_y": 129,
+          "offset_meters": {
+            "dx": 515.3505485745615,
+            "dy": 314.09481721491227
+          },
+          "original_lat": 46.09882578310407,
+          "original_lon": -122.6143356300526
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 7,
+      "coordinates": [
+        {
+          "latitude": 46.20270029678925,
+          "longitude": -122.68792464630172,
+          "pixel_x": 2031,
+          "pixel_y": 127,
+          "offset_meters": {
+            "dx": 403.36730690789483,
+            "dy": 315.43593388157893
+          },
+          "original_lat": 46.09883784858433,
+          "original_lon": -122.61578376618525
+        },
+        {
+          "latitude": 46.20263997048901,
+          "longitude": -122.6879680852939,
+          "pixel_x": 2026,
+          "pixel_y": 137,
+          "offset_meters": {
+            "dx": 400.01451524122814,
+            "dy": 308.7303505482456
+          },
+          "original_lat": 46.098777521183024,
+          "original_lon": -122.6158271235545
+        },
+        {
+          "latitude": 46.202682198899176,
+          "longitude": -122.68781170492207,
+          "pixel_x": 2044,
+          "pixel_y": 130,
+          "offset_meters": {
+            "dx": 412.0845652412282,
+            "dy": 313.42425888157896
+          },
+          "original_lat": 46.09881975036394,
+          "original_lon": -122.61567103702522
+        },
+        {
+          "latitude": 46.202627905228965,
+          "longitude": -122.68775089033302,
+          "pixel_x": 2051,
+          "pixel_y": 139,
+          "offset_meters": {
+            "dx": 416.7784735745615,
+            "dy": 307.38923388157895
+          },
+          "original_lat": 46.09876545570276,
+          "original_lon": -122.61561033670829
+        },
+        {
+          "latitude": 46.202597742078844,
+          "longitude": -122.68793333410017,
+          "pixel_x": 2030,
+          "pixel_y": 144,
+          "offset_meters": {
+            "dx": 402.69674857456147,
+            "dy": 304.03644221491226
+          },
+          "original_lat": 46.09873529200211,
+          "original_lon": -122.6157924376591
+        },
+        {
+          "latitude": 46.20249518736844,
+          "longitude": -122.6879680852939,
+          "pixel_x": 2026,
+          "pixel_y": 161,
+          "offset_meters": {
+            "dx": 400.01451524122814,
+            "dy": 292.63695054824564
+          },
+          "original_lat": 46.09863273541989,
+          "original_lon": -122.6158271235545
+        },
+        {
+          "latitude": 46.202477089478364,
+          "longitude": -122.68768138794553,
+          "pixel_x": 2059,
+          "pixel_y": 164,
+          "offset_meters": {
+            "dx": 422.1429402412282,
+            "dy": 290.6252755482456
+          },
+          "original_lat": 46.098614637199496,
+          "original_lon": -122.6155409649175
+        },
+        {
+          "latitude": 46.2026882315292,
+          "longitude": -122.68770745134084,
+          "pixel_x": 2056,
+          "pixel_y": 129,
+          "offset_meters": {
+            "dx": 420.13126524122816,
+            "dy": 314.09481721491227
+          },
+          "original_lat": 46.09882578310407,
+          "original_lon": -122.61556697933905
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    },
+    {
+      "shape_id": 8,
+      "coordinates": [
+        {
+          "latitude": 46.20270029678925,
+          "longitude": -122.69169515082267,
+          "pixel_x": 1597,
+          "pixel_y": 127,
+          "offset_meters": {
+            "dx": 112.34499024122815,
+            "dy": 315.43593388157893
+          },
+          "original_lat": 46.09883784858433,
+          "original_lon": -122.61954718583539
+        },
+        {
+          "latitude": 46.20263997048901,
+          "longitude": -122.69173858981485,
+          "pixel_x": 1592,
+          "pixel_y": 137,
+          "offset_meters": {
+            "dx": 108.99219857456148,
+            "dy": 308.7303505482456
+          },
+          "original_lat": 46.098777521183024,
+          "original_lon": -122.61959054320464
+        },
+        {
+          "latitude": 46.202682198899176,
+          "longitude": -122.69158220944301,
+          "pixel_x": 1610,
+          "pixel_y": 130,
+          "offset_meters": {
+            "dx": 121.06224857456148,
+            "dy": 313.42425888157896
+          },
+          "original_lat": 46.09881975036394,
+          "original_lon": -122.61943445667536
+        },
+        {
+          "latitude": 46.202627905228965,
+          "longitude": -122.69152139485396,
+          "pixel_x": 1617,
+          "pixel_y": 139,
+          "offset_meters": {
+            "dx": 125.75615690789482,
+            "dy": 307.38923388157895
+          },
+          "original_lat": 46.09876545570276,
+          "original_lon": -122.61937375635843
+        },
+        {
+          "latitude": 46.202597742078844,
+          "longitude": -122.69170383862111,
+          "pixel_x": 1596,
+          "pixel_y": 144,
+          "offset_meters": {
+            "dx": 111.67443190789481,
+            "dy": 304.03644221491226
+          },
+          "original_lat": 46.09873529200211,
+          "original_lon": -122.61955585730924
+        },
+        {
+          "latitude": 46.20249518736844,
+          "longitude": -122.69173858981485,
+          "pixel_x": 1592,
+          "pixel_y": 161,
+          "offset_meters": {
+            "dx": 108.99219857456148,
+            "dy": 292.63695054824564
+          },
+          "original_lat": 46.09863273541989,
+          "original_lon": -122.61959054320464
+        },
+        {
+          "latitude": 46.202477089478364,
+          "longitude": -122.69145189246647,
+          "pixel_x": 1625,
+          "pixel_y": 164,
+          "offset_meters": {
+            "dx": 131.12062357456148,
+            "dy": 290.6252755482456
+          },
+          "original_lat": 46.098614637199496,
+          "original_lon": -122.61930438456764
+        },
+        {
+          "latitude": 46.2026882315292,
+          "longitude": -122.69147795586179,
+          "pixel_x": 1622,
+          "pixel_y": 129,
+          "offset_meters": {
+            "dx": 129.10894857456148,
+            "dy": 314.09481721491227
+          },
+          "original_lat": 46.09882578310407,
+          "original_lon": -122.61933039898919
+        }
+      ],
+      "conversion_method": "enhanced_v5",
+      "base_location": {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      },
+      "scale_info": {
+        "method": "text_pattern_exact",
+        "scale_found": true,
+        "scale_meters_per_pixel": 0.6705583333333334,
+        "confidence": 0.9,
+        "details": {
+          "pattern": "0.01 0.03 0.05 mi",
+          "scale_miles": 0.05,
+          "scale_meters": 80.467,
+          "estimated_bar_pixels": 120
+        }
+      },
+      "centroid_reference": {
+        "x": 1429.4605263157894,
+        "y": 597.4078947368421
+      }
+    }
+  ],
+  "geocoding_result": {
+    "selected_location": {
+      "latitude": 46.1998625,
+      "longitude": -122.6931507,
+      "address": "Cowlitz County, Washington, United States",
+      "confidence": 0.9999999999999999,
+      "method": "geocoding",
+      "query": "Cowlitz County, Washington"
+    },
+    "all_attempts": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      {
+        "latitude": 45.6079925,
+        "longitude": -122.2296359,
+        "address": "Dolan Road, Skamania County, Washington, United States",
+        "confidence": 0.8,
+        "method": "geocoding",
+        "query": "324 Dolan Road, Washington State"
+      },
+      {
+        "latitude": 46.1998625,
+        "longitude": -122.6931507,
+        "address": "Cowlitz County, Washington, United States",
+        "confidence": 0.9999999999999999,
+        "method": "geocoding",
+        "query": "Cowlitz County, Washington"
+      }
+    ],
+    "total_attempts": 10
+  },
+  "scale_result": {
+    "method": "text_pattern_exact",
+    "scale_found": true,
+    "scale_meters_per_pixel": 0.6705583333333334,
+    "confidence": 0.9,
+    "details": {
+      "pattern": "0.01 0.03 0.05 mi",
+      "scale_miles": 0.05,
+      "scale_meters": 80.467,
+      "estimated_bar_pixels": 120
+    }
+  },
+  "processing_method": "enhanced_v5",
+  "image_shape": [
+    3000,
+    2000
+  ],
+  "extracted_text_sample": "\n    (LOT 2) 324 Dolan Road Aerial Map\n    0.01 0.03 0.05 mi\n    ADDRESS POINTS\n    Cowlitz County GIS Department\n    Washington State\n    Scale: 0.01 0.03 0.05 mi\n    Dolan Road\n    324 Dolan Road\n  ..."
+}

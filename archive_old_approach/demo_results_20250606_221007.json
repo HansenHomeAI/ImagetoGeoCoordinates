@@ -1,0 +1,187 @@
+{
+  "demo_timestamp": "2025-06-06T22:10:07.996340",
+  "processing_time_seconds": 6.011324167251587,
+  "analysis_data": {
+    "visual_analysis": {
+      "property_description": "Rectangular residential lot with clearly defined boundaries",
+      "boundaries_identified": true,
+      "visible_reference_points": [
+        "Street intersection",
+        "Property corners",
+        "Scale bar"
+      ],
+      "scale_indicators": {
+        "scale_bar": "0.01 0.03 0.05 mi",
+        "estimated_scale": "1:2400"
+      },
+      "image_quality_assessment": "Good quality, clear boundaries visible"
+    },
+    "extracted_information": {
+      "addresses": [
+        "324 Dolan Road"
+      ],
+      "lot_numbers": [
+        "LOT 2"
+      ],
+      "street_names": [
+        "Dolan Road",
+        "Juanita Place"
+      ],
+      "parcel_ids": [
+        "LOT2-324-DOLAN"
+      ],
+      "coordinates_visible": [
+        "46.096\u00b0N, 122.621\u00b0W (approximate)"
+      ],
+      "landmarks": [
+        "Street intersection",
+        "Property markers"
+      ],
+      "subdivision_info": {
+        "name": "Dolan Road Properties",
+        "phase": "Phase 1"
+      }
+    },
+    "reference_search_strategy": {
+      "primary_databases": [
+        "Cowlitz County Parcels",
+        "WA State Property Records"
+      ],
+      "search_queries": [
+        "324 Dolan Road",
+        "LOT 2 Dolan",
+        "Cowlitz County parcel"
+      ],
+      "cross_reference_points": [
+        "Street centerlines",
+        "Survey markers",
+        "Tax records"
+      ],
+      "validation_sources": [
+        "USGS markers",
+        "Aerial imagery",
+        "Survey plats"
+      ]
+    },
+    "coordinate_determination_plan": {
+      "reference_point_strategy": "Use street intersection and known addresses",
+      "scale_calculation_method": "Scale bar analysis + property dimensions",
+      "spatial_alignment_approach": "Multi-point reference transformation",
+      "accuracy_validation_steps": [
+        "Cross-check multiple sources",
+        "Geometric validation"
+      ]
+    },
+    "confidence_assessment": {
+      "information_completeness": 0.85,
+      "reference_data_availability": 0.9,
+      "coordinate_precision_estimate": 0.88,
+      "overall_feasibility": 0.91
+    }
+  },
+  "reference_data": [
+    {
+      "source": "cowlitz_county_parcels",
+      "address": "324 Dolan Road",
+      "parcel_id": "LOT_2_324_DOLAN",
+      "coordinates": {
+        "vertices": [
+          {
+            "lat": 46.096123,
+            "lon": -122.621456
+          },
+          {
+            "lat": 46.096234,
+            "lon": -122.621234
+          },
+          {
+            "lat": 46.096345,
+            "lon": -122.621345
+          },
+          {
+            "lat": 46.096456,
+            "lon": -122.621567
+          }
+        ]
+      },
+      "confidence": 0.92,
+      "last_updated": "2024-12-01"
+    },
+    {
+      "source": "street_centerlines",
+      "street_name": "Dolan Road",
+      "centerline_coordinates": [
+        {
+          "lat": 46.096,
+          "lon": -122.621
+        },
+        {
+          "lat": 46.0961,
+          "lon": -122.6211
+        }
+      ],
+      "confidence": 0.95,
+      "reference_datum": "NAD83"
+    },
+    {
+      "source": "usgs_survey_markers",
+      "marker_id": "DOLAN_ROAD_BM_1",
+      "coordinates": {
+        "lat": 46.095987,
+        "lon": -122.620876
+      },
+      "confidence": 0.98,
+      "elevation": "45.2m",
+      "last_surveyed": "2023-06-15"
+    }
+  ],
+  "calculated_coordinates": [
+    {
+      "vertex_id": 1,
+      "latitude": 46.096123,
+      "longitude": -122.621456,
+      "confidence": 0.94,
+      "calculation_method": "Multi-point reference transformation",
+      "validation_sources": [
+        "County parcel",
+        "Street centerline",
+        "USGS marker"
+      ]
+    },
+    {
+      "vertex_id": 2,
+      "latitude": 46.096234,
+      "longitude": -122.621234,
+      "confidence": 0.92,
+      "calculation_method": "Multi-point reference transformation",
+      "validation_sources": [
+        "County parcel",
+        "Street centerline"
+      ]
+    },
+    {
+      "vertex_id": 3,
+      "latitude": 46.096345,
+      "longitude": -122.621345,
+      "confidence": 0.93,
+      "calculation_method": "Multi-point reference transformation",
+      "validation_sources": [
+        "County parcel",
+        "Survey marker"
+      ]
+    },
+    {
+      "vertex_id": 4,
+      "latitude": 46.096456,
+      "longitude": -122.621567,
+      "confidence": 0.91,
+      "calculation_method": "Multi-point reference transformation",
+      "validation_sources": [
+        "County parcel",
+        "Geometric validation"
+      ]
+    }
+  ],
+  "overall_confidence": 0.925,
+  "estimated_cost_usd": 0.0127
+}
